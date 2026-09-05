@@ -1,0 +1,11 @@
+build/
+cmake-build-*/
+data/*.csv
+data/*.log
+data/statement_*.txt
+.idea/
+.vscode/
+*.o
+*.a
+*.out
+.DS_Store

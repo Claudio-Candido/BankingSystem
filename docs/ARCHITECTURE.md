@@ -1,5 +1,7 @@
 # Arquitetura
 
+![Arquitetura](imagens/arquitetura.png)
+
 ## Camadas
 
 ### UI (`banca/ui`)

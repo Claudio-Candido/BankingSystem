@@ -3,6 +3,7 @@ cmake-build-*/
 data/*.csv
 data/*.log
 data/statement_*.txt
+data/extrato_*.txt
 .idea/
 .vscode/
 *.o

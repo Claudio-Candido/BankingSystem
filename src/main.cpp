@@ -1,8 +1,8 @@
-#include "banking/business/BankingService.hpp"
-#include "banking/common/Logger.hpp"
-#include "banking/data/AccountRepository.hpp"
-#include "banking/data/TransactionRepository.hpp"
-#include "banking/ui/ConsoleUI.hpp"
+#include "banca/comum/Registador.hpp"
+#include "banca/dados/RepositorioContas.hpp"
+#include "banca/dados/RepositorioTransacoes.hpp"
+#include "banca/negocio/ServicoBancario.hpp"
+#include "banca/ui/InterfaceConsola.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -13,25 +13,25 @@ namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
     try {
-        std::string dataDir = "data";
+        std::string diretorioDados = "data";
         if (argc > 1) {
-            dataDir = argv[1];
+            diretorioDados = argv[1];
         }
 
-        fs::create_directories(dataDir);
+        fs::create_directories(diretorioDados);
 
-        banking::Logger::instance().setLevel(banking::LogLevel::Info);
-        banking::Logger::instance().setLogFile(dataDir + "/banking.log");
-        banking::Logger::instance().info("Banking System starting");
+        banca::Registador::instancia().definirNivel(banca::NivelRegisto::Info);
+        banca::Registador::instancia().definirFicheiroRegisto(diretorioDados + "/banca.log");
+        banca::Registador::instancia().info("Sistema Bancario a iniciar");
 
-        auto accounts = std::make_shared<banking::AccountRepository>(dataDir + "/accounts.csv");
-        auto transactions = std::make_shared<banking::TransactionRepository>(dataDir + "/transactions.csv");
-        auto service = std::make_shared<banking::BankingService>(accounts, transactions, dataDir);
+        auto contas = std::make_shared<banca::RepositorioContas>(diretorioDados + "/contas.csv");
+        auto transacoes = std::make_shared<banca::RepositorioTransacoes>(diretorioDados + "/transacoes.csv");
+        auto servico = std::make_shared<banca::ServicoBancario>(contas, transacoes, diretorioDados);
 
-        banking::ConsoleUI ui(service);
-        ui.run();
+        banca::InterfaceConsola ui(servico);
+        ui.executar();
 
-        banking::Logger::instance().info("Banking System stopped");
+        banca::Registador::instancia().info("Sistema Bancario parado");
         return 0;
     } catch (const std::exception& ex) {
         std::cerr << "Fatal: " << ex.what() << '\n';

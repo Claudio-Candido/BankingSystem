@@ -1,62 +1,62 @@
-# Architecture
+# Arquitetura
 
-## Layers
+## Camadas
 
-### UI (`banking/ui`)
+### UI (`banca/ui`)
 
-- `ConsoleUI`: menus de terminal, leitura de input, apresentação de resultados.
-- Não contém regras de negócio; delega tudo a `BankingService`.
+- `InterfaceConsola`: menus de terminal, leitura de input, apresentação de resultados.
+- Não contém regras de negócio; delega tudo a `ServicoBancario`.
 - Traduz exceções de domínio em mensagens amigáveis.
 
-### Business Logic (`banking/business`)
+### Negócio (`banca/negocio`)
 
-- `BankingService`: orquestra criação de contas, movimentos, bloqueio, extratos e sessão.
-- `Session` / `SessionManager`: sessão **em memória**. Abrir sessão = selecionar conta por ID. Sem verificação de password.
-- `IdGenerator`: IDs de conta (`ACC…`), transação (`TX…`) e token de sessão demo.
+- `ServicoBancario`: orquestra criação de contas, movimentos, bloqueio, extratos e sessão.
+- `Sessao` / `GestorSessao`: sessão **em memória**. Abrir sessão = selecionar conta por ID. Sem verificação de password.
+- `GeradorIds`: IDs de conta (`ACC…`), transação (`TX…`) e token de sessão demo.
 
-### Domain (`banking/domain`)
+### Domínio (`banca/dominio`)
 
-- `Account` (abstrata): saldo, estado, dados do titular; interface polimórfica para taxas, juro e overdraft.
-- `CheckingAccount`, `SavingsAccount`, `BusinessAccount`: regras distintas.
-- `AccountFactory`: cria a subclasse correta a partir de `AccountType`.
-- `Transaction`: registo imutável de movimento.
+- `Conta` (abstrata): saldo, estado, dados do titular; interface polimórfica para taxas, juro e descoberto.
+- `ContaCorrente`, `ContaPoupanca`, `ContaEmpresa`: regras distintas.
+- `FabricaContas`: cria a subclasse correta a partir de `TipoConta`.
+- `Transacao`: registo imutável de movimento.
 
-### Data (`banking/data`)
+### Dados (`banca/dados`)
 
-- `IRepository<T>`: contrato template de repositório.
-- `AccountRepository`: `unordered_map` em memória + persistência CSV.
-- `TransactionRepository`: índice por conta + lista global; CSV.
-- `CsvUtil`: escape/split CSV.
+- `IRepositorio<T>`: contrato template de repositório.
+- `RepositorioContas`: `unordered_map` em memória + persistência CSV.
+- `RepositorioTransacoes`: índice por conta + lista global; CSV.
+- `UtilCsv`: escapar/dividir CSV.
 
-### Common (`banking/common`)
+### Comum (`banca/comum`)
 
 - `enum class` para tipos e estados.
-- Exceções tipadas (`ValidationException`, `InsufficientFundsException`, …).
-- `Logger` (singleton thread-safe).
+- Exceções tipadas (`ExcecaoValidacao`, `ExcecaoFundosInsuficientes`, …).
+- `Registador` (singleton thread-safe).
 - Validação de nome, email, telefone e montantes (centavos inteiros).
 
-## Money
+## Dinheiro
 
-Valores monetários usam `MoneyCents` (`int64_t`) para evitar erros de vírgula flutuante. A UI aceita strings como `100.50`.
+Valores monetários usam `Centavos` (`int64_t`) para evitar erros de vírgula flutuante. A UI aceita strings como `100.50`.
 
-## Persistence format
+## Formato de persistência
 
-`accounts.csv`:
-
-```
-id,type,holderName,email,phone,balanceCents,status
-```
-
-`transactions.csv`:
+`contas.csv`:
 
 ```
-id,accountId,type,amountCents,balanceAfterCents,description,relatedAccountId,timestamp
+id,tipo,nomeTitular,email,telefone,saldoCentavos,estado
 ```
 
-## Error handling
+`transacoes.csv`:
 
-Operações de negócio validam entrada e estado da conta. Falhas lançam exceções derivadas de `BankingException`, capturadas na UI e registadas no logger.
+```
+id,idConta,tipo,montanteCentavos,saldoAposCentavos,descricao,idContaRelacionada,carimboTempo
+```
 
-## Demo session policy
+## Tratamento de erros
 
-Este projeto **não** implementa autenticação. Em produção, a identidade seria validada por um serviço externo (OAuth, IdP, etc.). Aqui, o login existe apenas para estruturar o menu pós-seleção de conta.
+Operações de negócio validam entrada e estado da conta. Falhas lançam exceções derivadas de `ExcecaoBancaria`, capturadas na UI e registadas no registador.
+
+## Política de sessão demo
+
+Este projeto **não** implementa autenticação. Em produção, a identidade seria validada por um serviço externo (OAuth, IdP, etc.). Aqui, iniciar sessão existe apenas para estruturar o menu pós-seleção de conta.

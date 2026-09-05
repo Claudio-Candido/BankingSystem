@@ -3,36 +3,36 @@
 ## Iniciar
 
 ```bash
-./build/banking_system
+./build/sistema_bancario
 ```
 
 ## Criar conta
 
-No menu principal escolha **1. Create account**, selecione o tipo:
+No menu principal escolha **1. Criar conta**, selecione o tipo:
 
-| Tipo | Taxa levantamento | Taxa transferência | Overdraft | Juro anual |
-|------|-------------------|--------------------|-----------|------------|
-| Checking | 0.50 | 1.00 | 200.00 | 0% |
-| Savings | 1.50 | 0.00 | 0 | 2% |
-| Business | 0.00 | 0.1% (mín. 2.00) | 5000.00 | 0.5% |
+| Tipo | Taxa levantamento | Taxa transferência | Descoberto | Juro anual |
+|------|-------------------|--------------------|------------|------------|
+| Corrente | 0.50 | 1.00 | 200.00 | 0% |
+| Poupança | 1.50 | 0.00 | 0 | 2% |
+| Empresa | 0.00 | 0.1% (mín. 2.00) | 5000.00 | 0.5% |
 
-Anote o **Account ID** gerado (ex.: `ACC1000`).
+Anote o **ID da conta** gerado (ex.: `ACC1000`).
 
-## Login
+## Iniciar sessão
 
-Escolha **2. Login** e introduza o ID. Não é pedida password — isto é intencional (demo).
+Escolha **2. Iniciar sessão** e introduza o ID. Não é pedida password — isto é intencional (demo).
 
-## Operações (após login)
+## Operações (após iniciar sessão)
 
-- **Deposit / Withdraw / Transfer** — montantes no formato `100` ou `100.50`
-- **Balance** — saldo atual e limites
-- **Transaction history** — movimentos da conta
-- **Update personal data** — nome, email, telefone
-- **Generate statement** — escreve `data/statement_<ID>.txt`
+- **Depositar / Levantar / Transferir** — montantes no formato `100` ou `100.50`
+- **Saldo** — saldo atual e limites
+- **Histórico de transações** — movimentos da conta
+- **Atualizar dados pessoais** — nome, email, telefone
+- **Gerar extrato** — escreve `data/extrato_<ID>.txt`
 
 ## Bloquear conta
 
-No menu principal (sem sessão): **4. Block / unblock account**.
+No menu principal (sem sessão): **4. Bloquear / desbloquear conta**.
 
 Contas bloqueadas rejeitam depósitos, levantamentos e transferências.
 
@@ -40,7 +40,7 @@ Contas bloqueadas rejeitam depósitos, levantamentos e transferências.
 
 Ficheiros em `data/` (ou no diretório passado como argumento):
 
-- `accounts.csv`
-- `transactions.csv`
-- `banking.log`
-- `statement_*.txt`
+- `contas.csv`
+- `transacoes.csv`
+- `banca.log`
+- `extrato_*.txt`
